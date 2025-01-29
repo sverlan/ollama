@@ -83,9 +83,6 @@ jobs:
           go-version-file: go.mod
           cache: true
       - run: |
-          import-module 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'
-          Enter-VsDevShell -vsinstallpath 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise' -skipautomaticlocation -DevCmdArguments '-arch=x64 -no_logo'
-          if (!(gcc --version | select-string -quiet clang)) { throw "wrong gcc compiler detected - must be clang" }
           make dist
         name: make
       - uses: actions/upload-artifact@v4
@@ -140,9 +137,6 @@ jobs:
           echo "HIP_PATH=$(Resolve-Path 'C:\Program Files\AMD\ROCm\*\bin\clang.exe' | split-path | split-path | select -first 1)" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: make rocm runner
         run: |
-          import-module 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'
-          Enter-VsDevShell -vsinstallpath 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise' -skipautomaticlocation -DevCmdArguments '-arch=x64 -no_logo'
-          if (!(gcc --version | select-string -quiet clang)) { throw "wrong gcc compiler detected - must be clang" }
           make help-runners
           make dist_rocm
       - uses: actions/upload-artifact@v4
@@ -222,9 +216,6 @@ jobs:
 
       - name: make cuda runner
         run: |
-          import-module 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'
-          Enter-VsDevShell -vsinstallpath 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise' -skipautomaticlocation -DevCmdArguments '-arch=x64 -no_logo'
-          if (!(gcc --version | select-string -quiet clang)) { throw "wrong gcc compiler detected - must be clang" }
           make dist_cuda_v$(($env:CUDA_PATH | split-path -leaf) -replace 'v(\d+).*', '$1')
       - uses: actions/upload-artifact@v4
         with:
@@ -466,11 +457,8 @@ jobs:
       #     name: windows-arm64
       #     path: dist
       - run: |
-          import-module 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\Common7\Tools\Microsoft.VisualStudio.DevShell.dll'
-          Enter-VsDevShell -vsinstallpath 'C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise' -skipautomaticlocation -DevCmdArguments '-arch=x64 -no_logo'
           $env:OLLAMA_SKIP_GENERATE="1"
           $env:ARCH="amd64"
-          if (!(gcc --version | select-string -quiet clang)) { throw "wrong gcc compiler detected - must be clang" }
           & .\scripts\build_windows.ps1
       - uses: actions/upload-artifact@v4
         with:
